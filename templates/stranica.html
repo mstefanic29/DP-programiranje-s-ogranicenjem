@@ -1,0 +1,151 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <style>
+      form {
+            margin: 0 auto;
+            width: 1000px;
+            text-align: left;
+            font-size: 20px;
+
+        }
+
+
+        body {
+            background-image: url();
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-color: slategray;
+
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 50px;
+            height: 150px;
+        }
+
+    </style>
+  </head>
+  <body>
+    <h1>Programiranje s ograničenjem</h1>
+    <form name="forma_unos" method="post" action="variables">
+      <label for="broj_varijabli"> Unesite broj varijabli: </label> 
+      <input name="broj_varijabli" id="broj_varijabli" type="text" /><br /> <br>
+
+      <label for="broj_ogranicenja"> Unesite broj ograničenja: </label> 
+      <input id="broj_ogranicenja" type="text" /><br /><br /> <br>
+
+      <label for="min_max"> Minimizacija ili maksimizacija: </label> 
+      <select name="min_max" id="min_max">
+        <option value="min">Minimum</option>
+        <option value="max">Maximum</option></select
+      ><br />
+      <br>
+
+      <button name="broj_varijabli" id="generiraj" onclick="generate()">
+        Generiraj</button
+      ><br /><br />
+    </form>
+
+    <script>
+      $("#generiraj").click(function () {
+        $.ajax({
+          url: "variables",
+          type: "POST",
+          data: {
+            broj_varijabli: $("#broj_varijabli").val(),
+            broj_ogranicenja: $("#broj_ogranicenja").val(),
+            min_max: $("#min_max").val(),
+          },
+        });
+      });
+      function generate() {
+        event.preventDefault();
+
+        var forma = document.createElement("form");
+        forma.setAttribute("name", "forma_ogranicenja");
+        forma.setAttribute("method", "post");
+        forma.setAttribute("action", "program");
+
+        let broj_varijabli = document.getElementById("broj_varijabli").value;
+        let broj_ogranicenja =
+          document.getElementById("broj_ogranicenja").value;
+        const text1 = document.createTextNode("Funkcija: ");
+        forma.appendChild(text1);
+
+        for (let i = 1; i <= broj_varijabli; i++) {
+          var broj = document.createElement("input");
+          broj.type = "text";
+          broj.name = "X" + i;
+          broj.size = 5;
+          forma.appendChild(broj);
+          var l1 = document.createElement("label");
+          if (i != broj_varijabli) {
+            l1.innerHTML = "X" + i + "+";
+          }
+          if (i == broj_varijabli) {
+            l1.innerHTML = "X" + i;
+          }
+          forma.appendChild(l1);
+        }
+
+        const razmak = document.createElement("br");
+        const razmak2 = document.createElement("br");
+        const text2 = document.createTextNode("Ograničenja: ");
+        forma.appendChild(razmak);
+        forma.appendChild(razmak2);
+        forma.appendChild(text2);
+        forma.appendChild(razmak);
+
+        for (let x = 1; x <= broj_varijabli; x++) {
+          for (let i = 1; i <= broj_ogranicenja; i++) {
+            var broj = document.createElement("input");
+            broj.type = "text";
+            broj.name = "X" + i + "_" + x;
+            broj.size = 5;
+            forma.appendChild(broj);
+            var l1 = document.createElement("label");
+            if (i != broj_ogranicenja) {
+              l1.innerHTML = "X" + i + "+";
+              forma.appendChild(l1);
+            }
+            if (i == broj_ogranicenja) {
+              var opcije = ["<=", "<", ">", ">=", "=="];
+              var odabir = document.createElement("select");
+
+              for (var j = 0; j < opcije.length; j++) {
+                var option = document.createElement("option");
+                option.value = opcije[j];
+                option.text = opcije[j];
+                odabir.appendChild(option);
+              }
+
+              var broj2 = document.createElement("input");
+              broj2.type = "text";
+              broj2.name = "polje_fin_" + x;
+              broj2.size = 5;
+              odabir.name = "operator_" + i + "_" + x;
+              l1.innerHTML = "X" + i;
+              forma.appendChild(l1);
+              forma.appendChild(odabir);
+              forma.appendChild(broj2);
+              var r = document.createElement("br");
+              forma.appendChild(r);
+            }
+            document.body.appendChild(forma);
+          }
+        }
+        var s = document.createElement("input");
+        s.setAttribute("type", "submit");
+        s.setAttribute("value", "Submit");
+
+        forma.appendChild(s);
+        document.body.appendChild(forma);
+      }
+    </script>
+  </body>
+</html>
